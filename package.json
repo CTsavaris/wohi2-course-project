@@ -1,0 +1,18 @@
+{
+  "name": "backend-course-project",
+  "version": "1.0.0",
+  "description": "WO>HI 2 project",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js" 
+  },
+  "keywords": ["express", "nodejs", "backend", "api"],
+  "author": "",
+  "license": "ISC, MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
