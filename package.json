@@ -6,13 +6,22 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js" 
+    "dev": "node --watch src/index.js"
   },
-  "keywords": ["express", "nodejs", "backend", "api"],
+  "keywords": [
+    "express",
+    "nodejs",
+    "backend",
+    "api"
+  ],
   "author": "",
   "license": "ISC, MIT",
   "type": "commonjs",
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "prisma": "^6.19.3"
   }
 }
