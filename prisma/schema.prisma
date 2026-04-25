@@ -17,5 +17,16 @@ model Quiz {
   id       Int       @id @default(autoincrement())
   title    String    @db.VarChar(255)
   answer  String     @db.VarChar(255)
+  userId   Int
+  user     User @relation(fields: [userId], references: [id])
   @@map("quizzes")
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
+  name     String @db.VarChar(100)
+  posts    Quiz[]
+}
+

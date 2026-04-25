@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../lib/prisma");
-const quizzes = require("../data/quizzes");
+const authenticate = require("../middleware/auth");
+const isOwner = require("../middleware/isOwner");
+
+
+router.use(authenticate);
 
 // GET /quizzes - List all quizzes, with optional keyword filtering 
 // List all quizzes
@@ -48,6 +52,7 @@ router.get("/:quizId", async (req, res) => {
 // Create a new quiz
 router.post("/", async (req, res) => {
   const { title, answer } = req.body;
+  const userId = req.user.userId;
 
   if (!title || !answer) {
     return res.status(400).json({
@@ -63,7 +68,7 @@ router.post("/", async (req, res) => {
 
 // PUT /quizzes/:quizId
 // Edit a quiz
-router.put("/:quizId", async (req, res) => {
+router.put("/:quizId", isOwner, async (req, res) => {
   const quizId = Number(req.params.quizId);
   const { title, answer } = req.body;
   const existingQuiz = await prisma.quiz.findUnique({
@@ -94,7 +99,7 @@ router.put("/:quizId", async (req, res) => {
 
 // DELETE /quizzes/:quizId
 // Delete a quiz
-router.delete("/:quizId", async (req, res) => {
+router.delete("/:quizId", isOwner, async (req, res) => {
   const quizId = Number(req.params.quizId);
 
   const quiz = await prisma.quiz.findUnique({
