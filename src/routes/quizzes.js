@@ -7,26 +7,41 @@ const isOwner = require("../middleware/isOwner");
 
 router.use(authenticate);
 
+function formatQuiz(quiz) {
+  return {
+    ...quiz,
+    userName: quiz.user?.name || null,
+    user: undefined,
+  };
+}
+
 // GET /quizzes - List all quizzes, with optional keyword filtering 
 // List all quizzes
 router.get("/", async (req, res) => {
-  const { title } = req.query;
+  const { title} = req.query;
 
-  if (!title) {
-    const allQuizzes = await prisma.quiz.findMany();
-    return res.json(allQuizzes);
-  }
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 5));
+  const skip = (page - 1) * limit;
 
-  const filteredQuizzes = await prisma.quiz.findMany({
-    where: {
-      title: {
-        contains: title,
-        mode: 'insensitive'
-      }
-    }
+
+  const [filteredQuizzes, total] = await Promise.all([
+    prisma.quiz.findMany({
+      where: { title: title },
+      include: {user: true},
+      orderBy: {id: "asc"},
+      skip,
+      take: limit
+    }),prisma.post.count({where})
+  ]);
+
+  res.json({
+    data: filteredQuizzes.map(formatQuiz),
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
   });
-
-  res.json(filteredQuizzes);
 });
 
 // GET /quizzes/:quizId
@@ -34,9 +49,8 @@ router.get("/", async (req, res) => {
 router.get("/:quizId", async (req, res) => {
   const quizId = Number(req.params.quizId);
   const quiz = await prisma.quiz.findUnique({
-    where: {
-      id: quizId
-    }
+    where: {id: quizId},
+    include: {user: true}
   });
 
   if (!quiz) {
@@ -72,9 +86,7 @@ router.put("/:quizId", isOwner, async (req, res) => {
   const quizId = Number(req.params.quizId);
   const { title, answer } = req.body;
   const existingQuiz = await prisma.quiz.findUnique({
-    where: {
-      id: quizId
-    }
+    where: {id: quizId}
   });
   if (!existingQuiz) {
     return res.status(404).json({ message: "Quiz not found" });
@@ -85,9 +97,13 @@ router.put("/:quizId", isOwner, async (req, res) => {
       message: "title and answer are required"
     });
   }
+
   const updatedQuiz = await prisma.quiz.update({
     where: {
       id: quizId
+    }, 
+    include: {
+      user: true
     },
     data: {
       title, answer
