@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const { NotFoundError, ForbiddenError } = require("../lib/errors");
 
 async function isOwner(req, res, next) {
     const quizId = Number(req.params.quizId);
@@ -8,10 +9,10 @@ async function isOwner(req, res, next) {
         }
     });
     if (!quiz) {
-        return res.status(404).json({ error: "Quiz not found" });
+        throw new NotFoundError("Quiz not found");
     }
     if (quiz.userId !== req.user.userId) {
-        return res.status(403).json({ error: "you can only modify your own quizzes" });
+        throw new ForbiddenError("you can only modify your own quizzes");
     }
 
     req.quiz = quiz; 
