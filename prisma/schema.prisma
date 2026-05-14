@@ -16,9 +16,14 @@ datasource db {
 model Quiz {
   id       Int       @id @default(autoincrement())
   title    String    @db.VarChar(255)
-  answer  String     @db.VarChar(255)
+  answer   String    @db.VarChar(255)
   userId   Int
-  user     User @relation(fields: [userId], references: [id])
+  imageUrl  String? @db.VarChar(255)
+  user     User      @relation(fields: [userId], references: [id])
+  keywords Keyword[]
+  likes    Like[]
+  solves   Solve[]
+
   @@map("quizzes")
 }
 
@@ -27,6 +32,39 @@ model User {
   email    String @unique @db.VarChar(255)
   password String @db.VarChar(255)
   name     String @db.VarChar(100)
-  posts    Quiz[]
+  quizzes  Quiz[]
+  likes    Like[]
+  solves   Solve[]
 }
 
+model Keyword {
+  id      Int    @id @default(autoincrement())
+  name    String @unique @db.VarChar(100)
+  quizzes Quiz[]
+
+  @@map("keywords")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  quizId    Int
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+
+  @@unique([userId, quizId])
+  @@map("likes")
+}
+
+model Solve {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  quizId    Int
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+
+  @@unique([userId, quizId])
+  @@map("solves")
+}

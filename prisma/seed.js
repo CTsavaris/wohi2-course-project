@@ -7,19 +7,23 @@ const prisma = new PrismaClient();
 const seedQuizzes = [
     {
         title: 'What is the symbol for the element Gold in chemistry?',
-        answer: 'Au'
+        answer: 'Au',
+        keywords: ['chemistry', 'elements', 'gold']
     },
     {
         title: 'What houshold product is the chemical symbol NaCl?',
-        answer: 'Salt'
+        answer: 'Salt',
+        keywords: ['chemistry', 'elements']
     },
     {
         title: 'Who invented the second law of thermodynamics?',
-        answer: 'Sadi Carnot'
+        answer: 'Sadi Carnot',
+        keywords: ['physics', 'thermodynamics', 'invention']
     },
     {
         title: 'What is the chemical symbol for water?',
-        answer: 'H2O'
+        answer: 'H2O',
+        keywords: ['chemistry', 'molecules', 'water']
     },
 ];
 
@@ -41,10 +45,18 @@ async function main() {
       data: {
         title: quiz.title,
         answer: quiz.answer,
+        keywords: {
+          connectOrCreate: quiz.keywords.map((kw) => ({
+            where: { name: kw }, create: { name: kw },
+          })),
+        },
         userId: user.id,
       },
-    })}
-};
+    });
+  }
+}
+
+
 
 console.log("Seed data inserted successfully");
 
