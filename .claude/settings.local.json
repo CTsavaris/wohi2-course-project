@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Move-Item \"c:\\\\Users\\\\chris\\\\backend-course-project\\\\public\\\\uploads\\\\index.html\" \"c:\\\\Users\\\\chris\\\\backend-course-project\\\\public\\\\index.html\")",
-      "Bash(Move-Item \"c:\\\\Users\\\\chris\\\\backend-course-project\\\\public\\\\uploads\\\\app.js\" \"c:\\\\Users\\\\chris\\\\backend-course-project\\\\public\\\\app.js\")",
-      "Bash(Move-Item \"c:\\\\Users\\\\chris\\\\backend-course-project\\\\public\\\\uploads\\\\config.js\" \"c:\\\\Users\\\\chris\\\\backend-course-project\\\\public\\\\config.js\")"
-    ]
-  }
-}
