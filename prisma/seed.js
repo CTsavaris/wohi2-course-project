@@ -29,7 +29,7 @@ const seedQuizzes = [
 
 async function main() {
   // Create a default user
-  const hashedPassword = await bcrypt.hash("1234", 10);
+  const hashedPassword = await bcrypt.hash("  ", 10);
   const user = await prisma.user.create({
     data: {
       email: "admin@example.com",

@@ -8,5 +8,5 @@ node_modules/
 
 public/uploads/*
 !public/uploads/.gitkeep
-.claude
 coverage/
+C:\Users\chris\backend-course-project\.env.test
