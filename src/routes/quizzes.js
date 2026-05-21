@@ -215,8 +215,6 @@ router.post("/:quizId/play", async (req, res) => {
   res.json({ correct, correctAnswer: quiz.answer });
 });
 
-module.exports = router;
-
 router.post("/:quizId/like", async (req, res) => {
   const quizId = Number(req.params.quizId);
   const quiz = await prisma.quiz.findUnique({where: { id: quizId }});
@@ -261,4 +259,4 @@ router.delete("/:quizId/like", async (req, res) => {
     res.json({ quizId, liked: false, likeCount });
 });
 
-
+module.exports = router;
